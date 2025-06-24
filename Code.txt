@@ -1,0 +1,56 @@
+ULTRASONIC PROXIMITY SENSOR:
+
+const int trigPin = 6;
+const int echoPin = 5;
+
+long duration;
+int distance;
+
+int led1=4;
+int led2=3;
+
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(13,12,11,10,9,8);
+void setup()
+{
+  pinMode(trigPin, OUTPUT);
+pinMode(echoPin, INPUT);
+pinMode(led1, OUTPUT);
+pinMode(led2, OUTPUT);
+Serial.begin(9600);    
+lcd.begin(16,2);
+lcd.clear();                     //Starts serial communication at 9600 baud rate (for printing values on Serial Monitor).
+}
+
+void loop()
+{
+digitalWrite(trigPin, HIGH);    //Start sending ultrasonic signals.
+delayMicroseconds(10);
+digitalWrite(trigPin, LOW);     //again low to complete the pulse.
+duration = pulseIn(echoPin, HIGH);
+distance= duration*0.034/2;
+Serial.print("Distance: ");
+Serial.println(distance);
+delay(1000);
+if (distance > 0 && distance < 20)  // Object is near
+{
+ lcd.setCursor(0,0);
+lcd.print("warning");
+lcd.setCursor(0,1);
+tone(7, 262, 250);
+digitalWrite(led1, HIGH);
+delay(1000);
+digitalWrite(led1, LOW);
+}
+else
+ {
+  digitalWrite(led2, HIGH);
+  delay(1000);
+digitalWrite(led2, LOW);
+  lcd.setCursor(0,0);
+lcd.print("no object");
+lcd.setCursor(0,1);
+ }
+ lcd.setCursor(0,0);
+ 
+}
